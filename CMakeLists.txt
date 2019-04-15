@@ -26,22 +26,12 @@ find_package(catkin REQUIRED COMPONENTS ${CATKIN_PKGS})
 
 add_required_dependency("yaml-cpp >= 0.5")
 build_prefix_for_pkg("yaml-cpp" yaml_cpp_name)
-set(catkin_INCLUDE_DIRS
-  ${${yaml_cpp_name}_INCLUDE_DIRS}
-  ${catkin_INCLUDE_DIRS}
-)
-link_directories(
-  ${${yaml_cpp_name}_LIBRARY_DIRS}
-)
-set(catkin_LIBRARIES
-  ${${yaml_cpp_name}_LIBRARIES}
-  ${catkin_LIBRARIES}
-)
 
 ##########################################
 # export the package as a catkin package #
 ##########################################
 
 catkin_package(
+  LIBRARIES ${${yaml_cpp_name}_LIBRARIES}
   INCLUDE_DIRS include
 )
