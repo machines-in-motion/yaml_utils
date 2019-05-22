@@ -1,23 +1,18 @@
-/*********************************************************************
- Autonomous Motion Department
- Max-Planck Intelligent Systems
- Prof. Stefan Schaal
- *********************************************************************
- \remarks      ...
-
- \file         yaml_eigen.h
-
- \author       Alexander Herzog
- \date         Feb 27, 2015
-
- *********************************************************************/
+/**
+ * @file yaml_eigen.h
+ * @author Alexander Herzog
+ * @license License BSD-3-Clause
+ * @copyright Copyright (c) 2019, New York University and Max Planck Gesellshaft.
+ * @date 2015-02-27
+ * 
+ * @brief Add support for eigen frm the yaml-cpp standard package.
+ */
 
 #pragma once
 
 #include <type_traits>
 #include <iomanip>
 #include <Eigen/Eigen>
-//#include "robot_math/movable_eigen_matrix.h"
 #include <yaml-cpp/yaml.h>
 
 namespace robot_math{
