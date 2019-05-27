@@ -35,3 +35,8 @@ catkin_package(
   LIBRARIES ${${yaml_cpp_name}_LIBRARIES}
   INCLUDE_DIRS include
 )
+
+##########################
+# building documentation #
+##########################
+build_doxygen_documentation()
