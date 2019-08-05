@@ -2,7 +2,7 @@
  * @file yaml_eigen.h
  * @author Alexander Herzog
  * @license License BSD-3-Clause
- * @copyright Copyright (c) 2019, New York University and Max Planck Gesellshaft.
+ * @copyright Copyright (c) 2019, New York University and Max Planck Gesellschaft.
  * @date 2015-02-27
  * 
  * @brief Add support for eigen frm the yaml-cpp standard package.
