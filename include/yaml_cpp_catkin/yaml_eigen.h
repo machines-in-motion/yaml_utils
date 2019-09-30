@@ -122,12 +122,19 @@ struct convert<Eigen::Matrix<Scalar,  Rows,  Cols,  Align,  RowsAtCompileTime,  
   static bool decode(const Node& node, Eigen_Type_& rhs){
     if(!node.IsSequence())
       return false;
-    else if(!node[0].IsSequence())
-      return decode_1d(node, rhs);
+    if(node.size() > 0)
+    {
+      if(!node[0].IsSequence())
+        return decode_1d(node, rhs);
+      else
+        return decode_2d(node, rhs);
+    }
     else
-      return decode_2d(node, rhs);
+    {
+      Converter_::resize_if_needed(0, 0, rhs);
+      return true;
+    }    
   }
-
 };
 
 
