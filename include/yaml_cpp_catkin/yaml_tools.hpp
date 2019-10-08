@@ -21,7 +21,7 @@ namespace YAML {
    * @return YamlType 
    */
   template <typename YamlType>
-  static YamlType read_parameter(const YAML::Node& node, const std::string& name) {
+  static YamlType ReadParameter(const YAML::Node& node, const std::string& name) {
     try { return node[name.c_str()].as<YamlType>(); }
     catch (...) { throw std::runtime_error("Error reading the yaml parameter [" + name + "]"); }
   }
@@ -35,8 +35,8 @@ namespace YAML {
    * @param parameter 
    */
   template <typename YamlType>
-  static void read_parameter(const YAML::Node& node, const std::string& name, YamlType& parameter) {
-    parameter = read_parameter<YamlType>(node, name);
+  static void ReadParameter(const YAML::Node& node, const std::string& name, YamlType& parameter) {
+    parameter = ReadParameter<YamlType>(node, name);
   }
 
 }
