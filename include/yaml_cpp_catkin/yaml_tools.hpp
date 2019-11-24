@@ -1,5 +1,5 @@
 /**
- * @file yaml_cpp.hpp
+ * @file yaml_tools.hpp
  * @author Maximilien Naveau (maximilien.naveau@gmail.com)
  * @license License BSD-3-Clause
  * @copyright Copyright (c) 2019, New York University and Max Planck Gesellschaft.
@@ -8,35 +8,68 @@
 
 #pragma once
 
-#include <yaml-cpp/yaml.h>
+#include <iomanip>
+#include <yaml_cpp_catkin/yaml_eigen.h>
 
 namespace YAML {
 
-  /**
-   * @brief helper function to safely read a yaml parameter
-   * 
-   * @tparam YamlType 
-   * @param node 
-   * @param name 
-   * @return YamlType 
-   */
-  template <typename YamlType>
-  static YamlType ReadParameter(const YAML::Node& node, const std::string& name) {
-    try { return node[name.c_str()].as<YamlType>(); }
-    catch (...) { throw std::runtime_error("Error reading the yaml parameter [" + name + "]"); }
-  }
+/**
+ * @brief helper function to safely read a yaml parameter
+ *
+ * @tparam YamlType
+ * @param node
+ * @param name
+ * @return YamlType
+ */
+template<typename YamlType>
+static YamlType ReadParameter(const YAML::Node& node, const std::string& name) {
+	try {
+		return node[name.c_str()].as<YamlType>();
+	} catch (...) {
+		throw std::runtime_error(
+				"Error reading the yaml parameter [" + name + "]");
+	}
+}
 
-  /**
-   * @brief helper function to safely read a yaml parameter
-   * 
-   * @tparam YamlType 
-   * @param node 
-   * @param name 
-   * @param parameter 
-   */
-  template <typename YamlType>
-  static void ReadParameter(const YAML::Node& node, const std::string& name, YamlType& parameter) {
-    parameter = ReadParameter<YamlType>(node, name);
-  }
+/**
+ * @brief helper function to safely read a yaml parameter
+ *
+ * @tparam YamlType
+ * @param node
+ * @param name
+ * @param parameter
+ */
+template<typename YamlType>
+static void ReadParameter(const YAML::Node& node, const std::string& name,
+		YamlType& parameter) {
+	parameter = ReadParameter<YamlType>(node, name);
+}
+
+/**
+ * @brief helper function to safely read a yaml parameter
+ *
+ * @param node
+ * @param name
+ * @tparam YamlType
+ * @param optional
+ * @return YamlType
+ */
+template<typename YamlType>
+void readParameter(const YAML::Node& node, const std::string& name,
+		YamlType& parameter, bool optional = false) {
+	try {
+		if (optional) {
+			if (node[name.c_str()]) {
+				parameter = node[name.c_str()].as<YamlType>();
+			}
+		} else {
+			parameter = node[name.c_str()].as<YamlType>();
+		}
+	} catch (...) {
+		if (!optional) {
+			throw std::runtime_error(name);
+		}
+	}
+}
 
 }
