@@ -57,18 +57,14 @@ static void ReadParameter(const YAML::Node& node, const std::string& name,
 template<typename YamlType>
 void readParameter(const YAML::Node& node, const std::string& name,
 		YamlType& parameter, bool optional = false) {
+	if (optional && !node[name.c_str()]) {
+		return;
+	}
 	try {
-		if (optional) {
-			if (node[name.c_str()]) {
-				parameter = node[name.c_str()].as<YamlType>();
-			}
-		} else {
-			parameter = node[name.c_str()].as<YamlType>();
-		}
+		parameter = node[name.c_str()].as<YamlType>();
 	} catch (...) {
-		if (!optional) {
-			throw std::runtime_error(name);
-		}
+		throw std::runtime_error(
+				"Error reading the yaml parameter [" + name + "]");
 	}
 }
 
