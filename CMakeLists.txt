@@ -59,8 +59,8 @@ include_directories(
 #########
 
 set(GTEST_FILES ${GTEST_FILES}
-  tests/GtestMain.cpp
-  tests/TestYamlTools.cpp
+  tests/gtest_main.cpp
+  tests/test_yaml_tools.cpp
 )
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
