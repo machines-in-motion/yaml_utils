@@ -1,5 +1,4 @@
 #include <random>
-#include <fstream>
 #include <gtest/gtest.h>
 
 #include <yaml_cpp_catkin/yaml_cpp_fwd.hpp>

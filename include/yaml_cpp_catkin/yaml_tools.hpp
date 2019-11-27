@@ -8,7 +8,6 @@
 
 #pragma once
 
-#include <iomanip>
 #include <yaml_cpp_catkin/yaml_eigen.h>
 
 namespace YAML {
