@@ -63,8 +63,10 @@ void readParameter(const YAML::Node& node, const std::string& name,
 	try {
 		parameter = node[name.c_str()].as<YamlType>();
 	} catch (...) {
-		throw std::runtime_error(
-				"Error reading the yaml parameter [" + name + "]");
+		if (!optional) {
+			throw std::runtime_error(
+					"Error reading the yaml parameter [" + name + "]");
+		}
 	}
 }
 

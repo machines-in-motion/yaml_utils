@@ -30,6 +30,8 @@ find_package(catkin REQUIRED COMPONENTS ${CATKIN_PKGS})
 add_required_dependency("yaml-cpp >= 0.5")
 build_prefix_for_pkg("yaml-cpp" yaml_cpp_name)
 
+search_for_eigen()
+
 ##########################################
 # export the package as a catkin package #
 ##########################################
@@ -39,7 +41,37 @@ catkin_package(
   INCLUDE_DIRS include
 )
 
+#######################
+# Include directories #
+#######################
+
+include_directories(
+  tests
+  include
+  ${EIGEN3_INCLUDE_DIR}
+  ${GTEST_INCLUDE_DIRS}
+  ${catkin_INCLUDE_DIRS}
+  ${${yaml_cpp_name}_INCLUDE_DIRS}
+)
+
+#########
+# tests #
+#########
+
+set(GTEST_FILES ${GTEST_FILES}
+  tests/GtestMain.cpp
+  tests/TestYamlTools.cpp
+)
+
+if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+  LINK_DIRECTORIES(/usr/local/lib)
+endif()
+
+catkin_add_gtest(yaml_cpp_catkin_tests ${GTEST_FILES})
+target_link_libraries(yaml_cpp_catkin_tests ${${yaml_cpp_name}_LIBRARIES} ${catkin_LIBRARIES})
+
 ##########################
 # building documentation #
 ##########################
+
 build_doxygen_documentation()
