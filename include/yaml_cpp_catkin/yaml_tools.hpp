@@ -40,7 +40,10 @@ static YamlType ReadParameter(const YAML::Node& node, const std::string& name) {
  */
 template<typename YamlType>
 static void ReadParameter(const YAML::Node& node, const std::string& name,
-		YamlType& parameter) {
+		YamlType& parameter, bool optional = false) {
+	if (optional && !node[name.c_str()]) {
+		return;
+	}
 	parameter = ReadParameter<YamlType>(node, name);
 }
 
