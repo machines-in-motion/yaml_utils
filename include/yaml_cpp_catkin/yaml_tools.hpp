@@ -47,6 +47,16 @@ static void ReadParameter(const YAML::Node& node, const std::string& name,
 	parameter = ReadParameter<YamlType>(node, name);
 }
 
+template<typename YamlType>
+static void ReadParameterDefault(const YAML::Node& node, const std::string& name,
+		YamlType& parameter, YamlType default_value) {
+	if (!node[name.c_str()]) {
+		parameter = default_value;
+	} else {
+        parameter = ReadParameter<YamlType>(node, name);
+    }
+}
+
 /**
  * @brief helper function to safely read a yaml parameter
  *
