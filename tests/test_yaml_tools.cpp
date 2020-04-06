@@ -1,4 +1,3 @@
-#include <random>
 #include <gtest/gtest.h>
 
 #include <yaml_cpp_catkin/yaml_cpp_fwd.hpp>
@@ -15,11 +14,10 @@ protected:
 
 TEST_F(YamlToolsTest, TestingReadOptionalParameterFunction)
 {
-	std::uniform_real_distribution<double> unif(-100.0, 100.0);
-	std::default_random_engine re;
 	double var_parameter;
-	double value_var_parameter1 = unif(re),
-	value_var_parameter2 = unif(re);
+	double value_var_parameter1 = 12.;
+	double value_var_parameter2 = 24.;
+	double value_default = 36.;
 
 	YAML::Node with_var_node, without_var_node;
 	with_var_node["var1"] = value_var_parameter1;
@@ -47,4 +45,10 @@ TEST_F(YamlToolsTest, TestingReadOptionalParameterFunction)
 		assert(e_str.compare("Error reading the yaml parameter [var2]")==0);
 	}
 
+	// Default value: Use provided value if exists.
+	YAML::ReadParameterDefault(with_var_node, "var1", var_parameter, value_default);
+	EXPECT_NEAR(value_var_parameter1, var_parameter, PRECISION);
+
+	YAML::ReadParameterDefault(with_var_node, "var3", var_parameter, value_default);
+	EXPECT_NEAR(value_default, var_parameter, PRECISION);
 }
