@@ -48,9 +48,12 @@ target_include_directories(
   INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
             $<INSTALL_INTERFACE:include>)
 # Dependencies
-target_link_libraries(${PROJECT_NAME} INTERFACE yaml-cpp Eigen3::Eigen)
+target_link_libraries(${PROJECT_NAME} INTERFACE Eigen3::Eigen)
+target_link_libraries(${PROJECT_NAME} INTERFACE ${YAML_CPP_LIBRARIES})
 # Export the target.
 ament_export_interfaces(export_${PROJECT_NAME} HAS_LIBRARY_TARGET)
+ament_export_libraries(${YAML_CPP_LIBRARIES})
+ament_export_include_directories(include)
 # For the installation
 list(APPEND all_targets ${PROJECT_NAME})
 list(APPEND all_target_exports export_${PROJECT_NAME})
@@ -69,10 +72,6 @@ if(BUILD_TESTING)
 
   # Link the dependecies to it.
   target_link_libraries(test_${PROJECT_NAME} ${PROJECT_NAME})
-  target_include_directories(
-    test_${PROJECT_NAME}
-    PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-           $<INSTALL_INTERFACE:include> SYSTEM)
 endif()
 
 #
