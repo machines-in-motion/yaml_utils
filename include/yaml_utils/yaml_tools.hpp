@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <yaml_cpp_catkin/yaml_eigen.h>
+#include "yaml_utils/yaml_eigen.hpp"
 
 namespace YAML {
 
