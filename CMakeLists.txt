@@ -34,7 +34,7 @@ ament_export_dependencies(mpi_cmake_modules yaml-cpp Eigen3)
 
 # prepare the final export
 set(all_targets)
-set(all_target_exports)
+ament_export_interfaces(export_${PROJECT_NAME} HAS_LIBRARY_TARGET)
 
 #
 # Build the main library
@@ -51,12 +51,10 @@ target_include_directories(
 target_link_libraries(${PROJECT_NAME} INTERFACE Eigen3::Eigen)
 target_link_libraries(${PROJECT_NAME} INTERFACE ${YAML_CPP_LIBRARIES})
 # Export the target.
-ament_export_interfaces(export_${PROJECT_NAME} HAS_LIBRARY_TARGET)
 ament_export_libraries(${YAML_CPP_LIBRARIES})
 ament_export_include_directories(include)
 # For the installation
 list(APPEND all_targets ${PROJECT_NAME})
-list(APPEND all_target_exports export_${PROJECT_NAME})
 
 #
 # add unit tests #
@@ -81,7 +79,7 @@ install(DIRECTORY include/ DESTINATION include)
 
 install(
   TARGETS ${all_targets}
-  EXPORT ${all_target_exports}
+  EXPORT export_${PROJECT_NAME}
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib
   RUNTIME DESTINATION bin
