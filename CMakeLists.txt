@@ -11,87 +11,93 @@ cmake_minimum_required(VERSION 3.10.2)
 
 project(yaml_utils)
 
-# Using C++17
-if(NOT CMAKE_C_STANDARD)
-  set(CMAKE_C_STANDARD 99)
-endif()
-if(NOT CMAKE_CXX_STANDARD)
-  set(CMAKE_CXX_STANDARD 17)
-endif()
+# specify the C++ 17 standard
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 #
 # Dependencies
 #
 
 # depend on ament macros
-find_package(ament_cmake REQUIRED)
-find_package(mpi_cmake_modules REQUIRED)
 find_package(yaml-cpp CONFIG REQUIRED)
 find_package(Eigen3 REQUIRED)
 
-# export de dependencies
-ament_export_dependencies(mpi_cmake_modules yaml-cpp Eigen3)
 
-# prepare the final export
-set(all_targets)
-ament_export_interfaces(export_${PROJECT_NAME} HAS_LIBRARY_TARGET)
-
-#
-# Build the main library
-#
-
-# Headers only library.
+# Headers only library. we only need to install
 add_library(${PROJECT_NAME} INTERFACE)
 # Add the include dependencies
 target_include_directories(
   ${PROJECT_NAME}
   INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
             $<INSTALL_INTERFACE:include>)
-# Dependencies
-target_link_libraries(${PROJECT_NAME} INTERFACE Eigen3::Eigen)
+
 target_link_libraries(${PROJECT_NAME} INTERFACE ${YAML_CPP_LIBRARIES})
-# Export the target.
-ament_export_libraries(${YAML_CPP_LIBRARIES})
-ament_export_include_directories(include)
-# For the installation
-list(APPEND all_targets ${PROJECT_NAME})
+target_link_libraries(${PROJECT_NAME} INTERFACE Eigen3::Eigen)
+
+# command to install the library
+install(
+  TARGETS ${PROJECT_NAME}
+  EXPORT ${PROJECT_NAME}Targets
+  )
+#
+# Install the includes (nothing else needs to be installed)
+#
+install(DIRECTORY include/ DESTINATION include)
 
 #
 # add unit tests #
 #
-if(BUILD_TESTING)
-  find_package(ament_cmake_gtest)
+find_package(GTest QUIET)
+if(${GTEST_FOUND})
+  include(GoogleTest)
 
-  # Set a general config folder path for all tests
-  set(TEST_CONFIG_PATH ${PROJECT_SOURCE_DIR}/tests/config/)
-
-  ament_add_gtest(test_${PROJECT_NAME} tests/gtest_main.cpp
-                  tests/test_yaml_tools.cpp)
-
-  # Link the dependecies to it.
-  target_link_libraries(test_${PROJECT_NAME} ${PROJECT_NAME})
+  add_executable(test_${PROJECT_NAME} 
+                      tests/gtest_main.cpp
+                      tests/test_yaml_tools.cpp)
+  target_link_libraries(test_${PROJECT_NAME} Eigen3::Eigen)
+  target_link_libraries(test_${PROJECT_NAME} ${YAML_CPP_LIBRARIES})
+  target_link_libraries(test_${PROJECT_NAME} GTest::GTest)
+  target_include_directories(
+    test_${PROJECT_NAME} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  )
+  gtest_add_tests(TARGET test_${PROJECT_NAME})
+else()
+  message(WARNING "GTest NOT FOUND")
 endif()
 
 #
-# Install the package
+# create the cmake package
 #
-install(DIRECTORY include/ DESTINATION include)
+# we need this to create a nice exportable package
+include(CMakePackageConfigHelpers)
 
-install(
-  TARGETS ${all_targets}
-  EXPORT export_${PROJECT_NAME}
-  LIBRARY DESTINATION lib
-  ARCHIVE DESTINATION lib
-  RUNTIME DESTINATION bin
-  INCLUDES
-  DESTINATION include)
+# generate the necessary cmake file
+configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/Config.cmake.in
+  "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
+  INSTALL_DESTINATION share/${PROJECT_NAME}/cmake
+)
+write_basic_package_version_file(
+  ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
+  VERSION 1.0.0
+  COMPATIBILITY SameMajorVersion )
+
+# we copy the cmake files we would need to configure the project
+install(FILES
+          "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
+          "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
+        DESTINATION share/${PROJECT_NAME}/cmake
+)
+
+
+# we install the cmake package
+install(EXPORT ${PROJECT_NAME}Targets
+        FILE ${PROJECT_NAME}Targets.cmake
+        NAMESPACE ${PROJECT_NAME}::
+        DESTINATION share/${PROJECT_NAME}/cmake
+)
 
 #
 # Building documentation.
 #
-add_documentation()
-
-#
-# Export as an ament_package
-#
-ament_package()
+# add_documentation()
