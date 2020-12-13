@@ -48,8 +48,9 @@ install(DIRECTORY include/ DESTINATION include)
 #
 # add unit tests #
 #
-find_package(GTest QUIET)
-if(${GTEST_FOUND})
+include(CTest)
+if(BUILD_TESTING)
+  find_package(GTest REQUIRED)
   include(GoogleTest)
 
   add_executable(test_${PROJECT_NAME} 
@@ -62,8 +63,6 @@ if(${GTEST_FOUND})
     test_${PROJECT_NAME} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   )
   gtest_add_tests(TARGET test_${PROJECT_NAME})
-else()
-  message(WARNING "GTest NOT FOUND")
 endif()
 
 #
