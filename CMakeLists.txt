@@ -50,7 +50,7 @@ install(DIRECTORY include/ DESTINATION include)
 #
 include(CTest)
 if(BUILD_TESTING)
-  find_package(GTest REQUIRED)
+  find_package(GTest CONFIG REQUIRED)
   include(GoogleTest)
 
   add_executable(test_${PROJECT_NAME} 
@@ -58,7 +58,7 @@ if(BUILD_TESTING)
                       tests/test_yaml_tools.cpp)
   target_link_libraries(test_${PROJECT_NAME} Eigen3::Eigen)
   target_link_libraries(test_${PROJECT_NAME} ${YAML_CPP_LIBRARIES})
-  target_link_libraries(test_${PROJECT_NAME} GTest::GTest)
+  target_link_libraries(test_${PROJECT_NAME} GTest::gtest)
   target_include_directories(
     test_${PROJECT_NAME} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   )
