@@ -25,5 +25,4 @@
 
     <!-- Unit tests -->
     <test_depend>googletest-distribution</test_depend>
-    <test_depend>GTest</test_depend>
 </package>
