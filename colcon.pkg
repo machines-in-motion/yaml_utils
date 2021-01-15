@@ -1,6 +1,3 @@
 {
-    "dependencies": ["yaml-cpp", "Eigen3"],
-    "build-dependencies": [],
-    "run-dependencies": [],
     "test-dependencies": ["googletest-distribution"]
 }
