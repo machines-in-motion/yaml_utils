@@ -9,7 +9,7 @@
 #
 cmake_minimum_required(VERSION 3.10.2)
 
-project(yaml_utils)
+project(yaml_utils VERSION 2.0.0)
 
 # specify the C++ 17 standard
 set(CMAKE_CXX_STANDARD 17)
